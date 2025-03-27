@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coral Chatbot</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="chat-wrapper">
+        <div class="chat-container" id="chat-container">
+            <header class="chat-header">
+                <div class="header-content">
+                    <h1>Coral Chatbot</h1>
+                    <p>Your Intelligent Personal Assistant</p>
+                </div>
+                <div class="header-icons">
+                    <button id="clear-chat" title="Clear Chat">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            </header>           
+            <div class="chat-box" id="chat-box">
+                <div class="message bot-message welcome-message">
+                    <div class="message-content">
+                        <p>Hello! 👋 I'm Coral, your intelligent assistant. How can I help you today?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="loading" id="loading" style="display: none;">
+                <div class="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <input type="text" id="message-input" placeholder="Type your message..." autofocus>
+                    <div class="input-actions">
+                        <button id="voice-btn" title="Voice Input">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <label for="image-input" class="image-input-label" title="Upload Image">
+                            <i class="fas fa-image"></i>
+                        </label>
+                        <input type="file" id="image-input" accept="image/*" />
+                    </div>
+                </div>
+                <button id="send-btn" title="Send Message">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div> 
+        </div>
+    </div>
+    <script src="/static/chatbot.js"></script>
+</body>
+</html>
