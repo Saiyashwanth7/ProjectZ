@@ -22,64 +22,6 @@ document.getElementById("clear-chat").addEventListener("click", function() {
     `;
 });
 
-// Function to parse and structure response
-function parseResponse(response) {
-    // Check if response is already an object, if not, wrap it
-    const resp = typeof response === 'string' ? { content: response } : response;
-
-    // Default structure
-    const structure = {
-        title: resp.title || '',
-        content: resp.content || resp,
-        sections: resp.sections || [],
-        conclusion: resp.conclusion || '',
-        note: resp.note || ''
-    };
-
-    return structure;
-}
-
-// Function to render structured response
-function renderStructuredResponse(responseObj) {
-    let responseHTML = '';
-
-    // Title
-    if (responseObj.title) {
-        responseHTML += `<h3 class="response-title">${responseObj.title}</h3>`;
-    }
-
-    // Main content
-    if (responseObj.content) {
-        responseHTML += `<p class="response-content">${responseObj.content}</p>`;
-    }
-
-    // Sections
-    if (responseObj.sections && responseObj.sections.length > 0) {
-        responseHTML += '<div class="response-sections">';
-        responseObj.sections.forEach((section, index) => {
-            responseHTML += `
-                <div class="response-section">
-                    <h4 class="section-title">• ${section.title || `Section ${index + 1}`}</h4>
-                    <p class="section-content">${section.content}</p>
-                </div>
-            `;
-        });
-        responseHTML += '</div>';
-    }
-
-    // Conclusion
-    if (responseObj.conclusion) {
-        responseHTML += `<p class="response-conclusion"><strong>In summary:</strong> ${responseObj.conclusion}</p>`;
-    }
-
-    // Note
-    if (responseObj.note) {
-        responseHTML += `<p class="response-note"><em>Note: ${responseObj.note}</em></p>`;
-    }
-
-    return responseHTML;
-}
-
 // Function to send the user's message to the server
 function sendMessage() {
     const messageInput = document.getElementById("message-input");
@@ -109,9 +51,7 @@ function sendMessage() {
         .then(data => {
             loadingIndicator.style.display = "none"; // Hide loading
             if (data.response) {
-                const parsedResponse = parseResponse(data.response);
-                const formattedResponse = renderStructuredResponse(parsedResponse);
-                addMessage(formattedResponse, "bot-message");
+                addMessage(data.response, "bot-message");
             } else {
                 addMessage("Sorry, I encountered an error. Please try again.", "bot-message");
             }
@@ -134,7 +74,7 @@ function addMessage(content, className) {
     chatBox.scrollTop = chatBox.scrollHeight; // Scroll to the bottom
 }
 
-// Rest of the code remains the same (voice recognition and image upload functions)
+// Voice recognition using Web Speech API
 function startVoiceRecognition() {
     const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
     recognition.lang = 'en-US';
@@ -165,9 +105,7 @@ function startVoiceRecognition() {
         })
         .then(data => {
             if (data.response) {
-                const parsedResponse = parseResponse(data.response);
-                const formattedResponse = renderStructuredResponse(parsedResponse);
-                addMessage(formattedResponse, "bot-message");
+                addMessage(data.response, "bot-message");
             } else {
                 addMessage("Sorry, I encountered an error. Please try again.", "bot-message");
             }
@@ -185,6 +123,7 @@ function startVoiceRecognition() {
     recognition.start();
 }
 
+// Function to send an image to the server
 function sendImage() {
     const imageInput = document.getElementById("image-input");
     const file = imageInput.files[0];
@@ -208,24 +147,8 @@ function sendImage() {
         .then(data => {
             loadingIndicator.style.display = "none"; // Hide loading
             if (data.tags && data.colors) {
-                const imageResponse = {
-                    title: 'Image Analysis',
-                    content: 'I analyzed the uploaded image and found the following details:',
-                    sections: [
-                        {
-                            title: 'Image Tags',
-                            content: data.tags.join(', ')
-                        },
-                        {
-                            title: 'Dominant Colors',
-                            content: data.colors.join(', ')
-                        }
-                    ],
-                    note: 'Image analysis is based on machine learning detection.'
-                };
-                
-                const formattedResponse = renderStructuredResponse(imageResponse);
-                addMessage(formattedResponse, "bot-message");
+                addMessage(`Tags: ${data.tags.join(', ')}`, "bot-message");
+                addMessage(`Colors: ${data.colors.join(', ')}`, "bot-message");
             } else {
                 addMessage("Sorry, I encountered an error processing the image. Please try again.", "bot-message");
             }
